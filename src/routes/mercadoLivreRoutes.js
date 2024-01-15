@@ -12,10 +12,10 @@ router.get('/listar-produtos', async (req, res) => {
 router.get('/buscar-termo', async (req, res) => {
     const siteId = 'MLB';
     const searchTerm = req.query.query;
+    const offset = req.query.offset || 0;
+    const limit = req.query.limit || 10; //
 
-    console.log(req.query.query);
-
-    const url = `https://api.mercadolibre.com/sites/${siteId}/search?q=${searchTerm}`;
+    const url = `https://api.mercadolibre.com/sites/${siteId}/search?q=${searchTerm}&offset=${offset}&limit=${limit}`;
 
     axios.get(url)
         .then(response => {
