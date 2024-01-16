@@ -2,14 +2,9 @@ const express = require('express');
 const axios = require('axios');
 const getEssentialsData = require("../factory/getProducts.factory");
 const router = express.Router();
+require('dotenv').config();
 
-
-router.get('/listar-produtos', async (req, res) => {
-    console.log('TESTE FUNCIONOU');
-});
-
-
-router.get('/buscar-termo', async (req, res) => {
+router.get('/search-product', async (req, res) => {
     const siteId = 'MLB';
     const searchTerm = req.query.query;
     const offset = req.query.offset || 0;
@@ -22,22 +17,27 @@ router.get('/buscar-termo', async (req, res) => {
             res.send(getEssentialsData(response.data.results))
         })
         .catch(error => {
+            res.status(404);
             console.error('Erro na solicitação:', error.message);
         });
 });
 
-router.get('/buscar-imagem', async (req, res) => {
-    const siteId = 'MLB';
-    const idImage = 'MLB3553462995';
+router.get('/get-details:itemId', async (req, res) => {
+    const itemId = req.params.itemId;
+    const url = `https://api.mercadolibre.com/items/${itemId}/description`;
+    const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
-    const url = `https://api.mercadolibre.com/items/${idImage}`;
-
-    axios.get(url)
+    axios.get(url, {
+        headers: {
+            'Authorization': `Bearer ${ACCESS_TOKEN}`
+        }
+    })
         .then(response => {
-
+            const { plain_text } = response.data;
+            res.json(plain_text);
         })
         .catch(error => {
-            console.error('Erro na solicitação:', error.message);
+            // console.error('There was an error!', error);
         });
 });
 

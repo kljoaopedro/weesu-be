@@ -1,5 +1,4 @@
 const ProductModel = require("../models/productModel");
-
 function getEssentialsData(resultsJson) {
     const sanitizeProducts = [];
     if (resultsJson) {
